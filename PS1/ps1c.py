@@ -35,8 +35,11 @@ while abs(current_savings - down_payment) >= epsilon and bisection_searches <= 1
         high = br
     br = (low + high) / 2.0
     bisection_searches += 1
+    
 
 if bisection_searches > 13:  # if it took more than 13 bisection searches i.e log10000 , then ...
     print("Cannot afford house in 3 years")
 else:
     print("Best Rate = ", br/10000)
+    
+# Reference: https://github.com/Nkumah7/MIT_OCW_6.0001_Probelm_Sets_Assignments/blob/master/mit_pset1/ps1c.py
