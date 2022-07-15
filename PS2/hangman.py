@@ -50,7 +50,7 @@ def choose_word(wordlist):
 # so that it can be accessed from anywhere in the program
 wordlist = load_words()
 
-
+# 1
 def is_word_guessed(secret_word, letters_guessed):
     '''
     secret_word: string, the word the user is guessing; assumes all letters are
@@ -109,7 +109,7 @@ def get_available_letters(letters_guessed):
                 available_letters += letter
     return available_letters
 
-
+# 2
 def hangman(secret_word):
     '''
     secret_word: string, the secret word to guess.
@@ -136,7 +136,7 @@ def hangman(secret_word):
     Follows the other limitations detailed in the problem write-up.
     '''
     # FILL IN YOUR CODE HERE AND DELETE "pass"
-    # A
+    
     print("Welcome to the game Hangman!")
     guesses_remaining = 6
     length_of_word = len(secret_word)
@@ -147,7 +147,7 @@ def hangman(secret_word):
     print(f"You have {warnings_remaining} warnings left.")
     print(space_dashes)
     
-    # B        
+          
     while True:
       print(f"You have {guesses_remaining} guesses left")      
       print(f"Available letters: {get_available_letters(letters_guessed)}")  
@@ -211,11 +211,9 @@ def hangman(secret_word):
 #(hint: you might want to pick your own
 # secret_word while you're doing your own testing)
 
-
 # -----------------------------------
 
-
-
+# 3
 def match_with_gaps(my_word, other_word):
     '''
     my_word: string with _ characters, current guess of secret word
@@ -226,7 +224,7 @@ def match_with_gaps(my_word, other_word):
         False otherwise: 
     '''
     # FILL IN YOUR CODE HERE AND DELETE "pass"
-    # 3A
+    
     my_word = my_word.replace(" ", "")
     if len(my_word) != len(other_word):
           return False
@@ -235,6 +233,7 @@ def match_with_gaps(my_word, other_word):
           if my_word.find(letter) != other_word.find(letter) or my_word.count(letter) != other_word.count(letter):
             return False
     return True
+  # Part 3 (match_with_gaps) - Reference: https://github.com/oSamDavis/MIT_OCW_6.0001_Probelm_Sets_Assignments/blob/master/mit_pset2/hangman.py
     
 
 def show_possible_matches(my_word):
@@ -258,9 +257,7 @@ def show_possible_matches(my_word):
     else:
       print("No matches found")
       
-# show_possible_matches("t_ _ t")
-
-
+# 4
 def hangman_with_hints(secret_word):
     '''
     secret_word: string, the secret word to guess.
@@ -299,7 +296,7 @@ def hangman_with_hints(secret_word):
     print(f"You have {warnings_remaining} warnings left.")
     print(space_dashes)
     
-    # B        
+          
     while True:
       print(f"You have {guesses_remaining} guesses left")      
       print(f"Available letters: {get_available_letters(letters_guessed)}")  
