@@ -2,11 +2,9 @@ import math
 import random
 import string
 
-from matplotlib.style import available
-
 VOWELS = 'aeiou'
 CONSONANTS = 'bcdfghjklmnpqrstvwxyz'
-HAND_SIZE = 7
+HAND_SIZE = 5
 
 SCRABBLE_LETTER_VALUES = {
     'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4, 'i': 1, 'j': 8, 'k': 5, 'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 1, 'v': 4, 'w': 4, 'x': 8, 'y': 4, 'z': 10
@@ -192,27 +190,24 @@ def is_valid_word(word, hand, word_list):
     
     new_word = ""
     word_exist = ""
-    p_words = []
-    hand_clone = hand.copy() 
-    
+    available_words = []
+    hand_clone = hand.copy()     
     
     valid_word = False
     if "*" in word:
         for vowel in VOWELS:
             new_word = word.replace("*", vowel)
             if new_word.lower() in word_list:
-                p_words.append(new_word)
-        if len(p_words) < 1:
+                available_words.append(new_word)
+        if len(available_words) < 1:
             return False
-        valid_word = True
-            
+        valid_word = True            
     # Reference - https://github.com/Nkumah7/MIT_OCW_6.0001_Probelm_Sets_Assignments/blob/master/mit_pset3/ps3.py
     
     for letter in word.lower():
         if letter in hand_clone and hand_clone[letter] > 0:           
             hand_clone[letter] -= 1
-            word_exist += letter            
-    
+            word_exist += letter     
         
     if len(word_exist) == len(word) and word.lower() in word_list or valid_word:
         return True
@@ -278,7 +273,7 @@ def play_hand(hand, word_list):
         
         # If the input is two exclamation points:
             if user_word == "!!":
-                print(f"Total score: {total_score} points")                
+                # print(f"Total score: {total_score} points")                
         
             # End the game (break out of the loop)
                 break 
@@ -313,8 +308,6 @@ def play_hand(hand, word_list):
 
     # Return the total score as result of function
     return total_score
-
-
 
 #
 # Problem #6: Playing a game
@@ -363,6 +356,7 @@ def user_input(user_ans, error_msg, input_type = str):
             return input_type(input(f"{user_ans} "))
         except (ValueError, KeyError, TypeError):
             print(error_msg)
+
 
 def yes_input(user_ans, error_msg):
     sub_letter_yes = ["yes", "y"]
@@ -421,14 +415,17 @@ def play_game(word_list):
         print("Current Hand", end=": ")
         display_hand(hand)      
         
-        if yes_input("Would you like to substitute a letter? ", "Please enter a valid letter"): 
-            while substitute_times:
+        
+        while substitute_times:
+            if yes_input("Would you like to substitute a letter (yes/y or no/n)? ", "Please enter yes/y or no/n"): 
                 try:                
                     letter_replacement = input("Which letter would you like to replace: ").lower().strip()
                     hand = substitute_hand(hand, letter_replacement)
                     substitute_times -= 1                
                 except KeyError:
-                    print("Please enter a valid letter")        
+                    print("Please enter a valid letter") 
+            else: 
+                break       
         
         score = play_hand(hand, word_list)
         print(f"Total score of this hand: {score}")   
@@ -440,19 +437,11 @@ def play_game(word_list):
             print(f"Total score over all hands: {total_score}") 
             break      
         
-        if yes_input("Would you like to replay the hand? ", "Please enter a valid letter"):
+        if yes_input("Would you like to replay the hand (yes/y or no/n)? ", "Please enter yes/y or no/n"):
             hand = hand_clone
         else:
             hand = deal_hand(HAND_SIZE)
-            
-            
-                    
-        
-        
-    
-    
-    
-
+     
 
 #
 # Build data structures used for entire session and play game
@@ -462,16 +451,4 @@ def play_game(word_list):
 if __name__ == '__main__':
     word_list = load_words()
     play_game(word_list)
-    # print(deal_hand(5))
-    # display_hand(deal_hand(7))
-    # display_hand({"c": 1, "o": 1, "w": 1, "s": 1, "z"})
-    # hand = {'a': 1, 'j': 1, 'e': 1, 'f': 1, '*': 1, 'r': 1, "x": 1}
-    # hand = {"a": 1, "c": 1, "f": 1, "i": 1, "*": 1, "t": 1, "x": 1}
-    # word = "e*m"
-    # is_valid_word(word, hand, word_list)
-    # play_hand(hand, word_list)
-    # print(deal_hand(7))
-    # print(substitute_hand({'h':1, 'e':1, 'l':2, 'o':1}, 'l'))
-    # substitute_hand({'h':1, 'e':1, 'l':2, 'o':1}, 'l')
-    
     
