@@ -2,6 +2,8 @@ import math
 import random
 import string
 
+from matplotlib.style import available
+
 VOWELS = 'aeiou'
 CONSONANTS = 'bcdfghjklmnpqrstvwxyz'
 HAND_SIZE = 7
@@ -306,7 +308,8 @@ def play_hand(hand, word_list):
     # so tell user the total score
         if calculate_handlen(hand) < 1:            
             letter_in_hand = False      
-            print(f"\nRan out of letters. Total score: {total_score} points")  
+            print("\nRan out of letters")
+            # print(f"Total score: {total_score} points")  
 
     # Return the total score as result of function
     return total_score
@@ -346,14 +349,37 @@ def substitute_hand(hand, letter):
     """
     
     hand_clone = hand.copy()
-    new_letter = random.choice(list(SCRABBLE_LETTER_VALUES.keys()))
-    
+    available_letters = [unused_letter for unused_letter in SCRABBLE_LETTER_VALUES.keys() if unused_letter != letter]
+    new_letter = random.choice(available_letters)
     hand_clone[new_letter] = hand_clone[letter]
     del hand_clone[letter]
     
     return hand_clone
        
-    
+
+def user_input(user_ans, error_msg, input_type = str):
+    while True:
+        try:
+            return input_type(input(f"{user_ans} "))
+        except (ValueError, KeyError, TypeError):
+            print(error_msg)
+
+def yes_input(user_ans, error_msg):
+    sub_letter_yes = ["yes", "y"]
+    sub_letter_no = ["no", "n"]
+    while True:
+        try:
+            sub_letter = input(user_ans).lower().strip()             
+            if sub_letter not in sub_letter_yes and sub_letter not in sub_letter_no:
+                raise ValueError
+            if sub_letter in sub_letter_yes:
+                return True
+            return False
+                
+        except ValueError:
+            print(error_msg)
+        
+               
 def play_game(word_list):
     """
     Allow the user to play a series of hands
@@ -385,6 +411,45 @@ def play_game(word_list):
     word_list: list of lowercase strings
     """
     
+    substitute_times = 1    
+    num_of_hands = user_input("Enter total number of hands:", "Please enter a number.", int)
+    hand = deal_hand(HAND_SIZE)
+    hand_clone = hand.copy()
+    total_score = 0
+    
+    while num_of_hands:        
+        print("Current Hand", end=": ")
+        display_hand(hand)      
+        
+        if yes_input("Would you like to substitute a letter? ", "Please enter a valid letter"): 
+            while substitute_times:
+                try:                
+                    letter_replacement = input("Which letter would you like to replace: ").lower().strip()
+                    hand = substitute_hand(hand, letter_replacement)
+                    substitute_times -= 1                
+                except KeyError:
+                    print("Please enter a valid letter")        
+        
+        score = play_hand(hand, word_list)
+        print(f"Total score of this hand: {score}")   
+        total_score += score  
+        print("---------------------------")
+        num_of_hands -= 1
+        
+        if num_of_hands < 1:            
+            print(f"Total score over all hands: {total_score}") 
+            break      
+        
+        if yes_input("Would you like to replay the hand? ", "Please enter a valid letter"):
+            hand = hand_clone
+        else:
+            hand = deal_hand(HAND_SIZE)
+            
+            
+                    
+        
+        
+    
     
     
 
@@ -401,11 +466,12 @@ if __name__ == '__main__':
     # display_hand(deal_hand(7))
     # display_hand({"c": 1, "o": 1, "w": 1, "s": 1, "z"})
     # hand = {'a': 1, 'j': 1, 'e': 1, 'f': 1, '*': 1, 'r': 1, "x": 1}
-    hand = {"a": 1, "c": 1, "f": 1, "i": 1, "*": 1, "t": 1, "x": 1}
+    # hand = {"a": 1, "c": 1, "f": 1, "i": 1, "*": 1, "t": 1, "x": 1}
     # word = "e*m"
     # is_valid_word(word, hand, word_list)
     # play_hand(hand, word_list)
     # print(deal_hand(7))
     # print(substitute_hand({'h':1, 'e':1, 'l':2, 'o':1}, 'l'))
+    # substitute_hand({'h':1, 'e':1, 'l':2, 'o':1}, 'l')
     
     
